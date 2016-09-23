@@ -1,0 +1,12 @@
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\AmdmData.dll.config
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\AmdmData.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\AmdmData.pdb
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\EntityFramework.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\EntityFramework.xml
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.csprojResolveAssemblyReference.cache
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.pdb

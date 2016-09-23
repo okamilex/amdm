@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="AmdmModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="C__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Chords">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ImageLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Songs" Relationship="Self.SongChord" FromRole="Chords" ToRole="Songs" />
+  </EntityType>
+  <EntityType Name="Performers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ImageLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PerformerPageLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="BiographyText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Songs" Relationship="Self.FK_dbo_Songs_dbo_Performers_PerformerId" FromRole="Performers" ToRole="Songs" />
+  </EntityType>
+  <EntityType Name="Songs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SongPageLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Text" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Views" Type="Int32" Nullable="false" />
+    <Property Name="VideoLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PerformerId" Type="Int32" />
+    <NavigationProperty Name="Performers" Relationship="Self.FK_dbo_Songs_dbo_Performers_PerformerId" FromRole="Songs" ToRole="Performers" />
+    <NavigationProperty Name="Chords" Relationship="Self.SongChord" FromRole="Songs" ToRole="Chords" />
+  </EntityType>
+  <Association Name="FK_dbo_Songs_dbo_Performers_PerformerId">
+    <End Role="Performers" Type="Self.Performers" Multiplicity="0..1" />
+    <End Role="Songs" Type="Self.Songs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Performers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Songs">
+        <PropertyRef Name="PerformerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="SongChord">
+    <End Role="Chords" Type="Self.Chords" Multiplicity="*" />
+    <End Role="Songs" Type="Self.Songs" Multiplicity="*" />
+  </Association>
+  <EntityContainer Name="AmdmContext" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+    <EntitySet Name="Chords" EntityType="Self.Chords" />
+    <EntitySet Name="Performers" EntityType="Self.Performers" />
+    <EntitySet Name="Songs" EntityType="Self.Songs" />
+    <AssociationSet Name="FK_dbo_Songs_dbo_Performers_PerformerId" Association="Self.FK_dbo_Songs_dbo_Performers_PerformerId">
+      <End Role="Performers" EntitySet="Performers" />
+      <End Role="Songs" EntitySet="Songs" />
+    </AssociationSet>
+    <AssociationSet Name="SongChord" Association="Self.SongChord">
+      <End Role="Chords" EntitySet="Chords" />
+      <End Role="Songs" EntitySet="Songs" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

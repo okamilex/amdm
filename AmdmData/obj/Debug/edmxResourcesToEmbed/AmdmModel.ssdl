@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище AmdmModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="__MigrationHistory">
+    <Key>
+      <PropertyRef Name="MigrationId" />
+      <PropertyRef Name="ContextKey" />
+    </Key>
+    <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+    <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+    <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+    <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Chords">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="ImageLink" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Performers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="ImageLink" Type="nvarchar(max)" />
+    <Property Name="PerformerPageLink" Type="nvarchar(max)" />
+    <Property Name="BiographyText" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="SongChord">
+    <Key>
+      <PropertyRef Name="SongId" />
+      <PropertyRef Name="ChordId" />
+    </Key>
+    <Property Name="SongId" Type="int" Nullable="false" />
+    <Property Name="ChordId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Songs">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" />
+    <Property Name="SongPageLink" Type="nvarchar(max)" />
+    <Property Name="Text" Type="nvarchar(max)" />
+    <Property Name="Views" Type="int" Nullable="false" />
+    <Property Name="VideoLink" Type="nvarchar(max)" />
+    <Property Name="PerformerId" Type="int" />
+  </EntityType>
+  <Association Name="FK_dbo_SongChord_dbo_Chords_ChordId">
+    <End Role="Chords" Type="Self.Chords" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SongChord" Type="Self.SongChord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Chords">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SongChord">
+        <PropertyRef Name="ChordId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_SongChord_dbo_Songs_SongId">
+    <End Role="Songs" Type="Self.Songs" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SongChord" Type="Self.SongChord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Songs">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SongChord">
+        <PropertyRef Name="SongId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_dbo_Songs_dbo_Performers_PerformerId">
+    <End Role="Performers" Type="Self.Performers" Multiplicity="0..1" />
+    <End Role="Songs" Type="Self.Songs" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Performers">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Songs">
+        <PropertyRef Name="PerformerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="Хранилище AmdmModelContainer">
+    <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Chords" EntityType="Self.Chords" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Performers" EntityType="Self.Performers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SongChord" EntityType="Self.SongChord" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Songs" EntityType="Self.Songs" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_dbo_SongChord_dbo_Chords_ChordId" Association="Self.FK_dbo_SongChord_dbo_Chords_ChordId">
+      <End Role="Chords" EntitySet="Chords" />
+      <End Role="SongChord" EntitySet="SongChord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_SongChord_dbo_Songs_SongId" Association="Self.FK_dbo_SongChord_dbo_Songs_SongId">
+      <End Role="Songs" EntitySet="Songs" />
+      <End Role="SongChord" EntitySet="SongChord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_dbo_Songs_dbo_Performers_PerformerId" Association="Self.FK_dbo_Songs_dbo_Performers_PerformerId">
+      <End Role="Performers" EntitySet="Performers" />
+      <End Role="Songs" EntitySet="Songs" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

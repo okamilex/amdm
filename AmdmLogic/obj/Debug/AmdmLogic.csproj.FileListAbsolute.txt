@@ -1,0 +1,10 @@
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\AmdmLogic.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\AmdmLogic.pdb
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\AmdmData.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\EntityFramework.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\AmdmData.pdb
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\EntityFramework.xml
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\obj\Debug\AmdmLogic.csprojResolveAssemblyReference.cache
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\obj\Debug\AmdmLogic.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmLogic\obj\Debug\AmdmLogic.pdb
