@@ -1,0 +1,59 @@
+﻿@model AmdmWeb.Models.Song.SongEditModel
+@{
+    ViewBag.Title = "SongEditPage";
+}
+<script src="~/Scripts/bootstrap-tokenfield.js"></script>
+<script src="~/Scripts/typeahead.bundle.min.js"></script>
+<link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" />
+<link href="~/Content/bootstrap-tokenfield/tokenfield-typeahead.css" rel="stylesheet" />
+<script src="~/Scripts/docs.min.js"></script>
+<script src="~/Scripts/affix.js"></script>
+<script src="~/Scripts/scrollspy.js"></script>
+
+<script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script src="~/Scripts/client-server.js"></script>
+
+<script>
+    $(function(){
+        var engine = new Bloodhound({
+            local: [{ value: 'A' }, { value: 'E' }, { value: 'Cm' }, { value: 'D' }, { value: 'Dsus4' }, { value: 'Bm' }, { value: 'B' }, { value: 'C' }, { value: 'G' }, { value: 'Am' }, { value: 'Dm' }, { value: 'Em' }, { value: 'F#m' }, { value: 'C#m' }, { value: 'Bm7' }, { value: 'Emaj7' }, { value: 'C#' }, { value: 'F' }, { value: 'Db' }, { value: 'Bbm' }, { value: 'F#' }, { value: 'Ab' }, { value: 'Db/C' }, { value: 'E7' }, { value: 'Gm' }, { value: 'Am7' }, { value: 'D7' }, { value: 'Am9' }, { value: 'Hm75+/F#' }, { value: 'H7' }, { value: 'D7#' }, { value: 'Fm' }, { value: 'Hm' }, { value: 'G#m' }, { value: 'D#m' }, { value: 'A#m' }, { value: 'H' }, { value: 'B7sus4' }, { value: 'Asus4' }, { value: 'C#F#m' }, { value: 'E/H' }, { value: 'Am/' }, { value: 'G/' }, { value: 'B7' }, { value: 'Emsus4' }, { value: 'Amsus4' }, { value: 'D#' }, { value: 'GEmAm' }, { value: 'Em7' }, { value: 'A7' }, { value: 'Dsus2' }, { value: 'G(III)' }, { value: 'A(V)' }, { value: 'D(V)' }, { value: 'D7(V)' }, { value: 'C#m7' }, { value: 'Bm9' }, { value: 'Fm#' }, { value: 'Cm#' }, { value: 'G#' }, { value: 'C(III)' }, { value: 'Dm(V)' }, { value: 'Am/G#' }, { value: 'Am/H' }, { value: 'Hm7' }, { value: 'D/F#' }, { value: 'Hm/F#' }, { value: 'Dadd11' }, { value: 'Dadd9' }, { value: 'F#m7' }, { value: 'C/E' }, { value: 'Dm7' }, { value: 'Dm7sus2' }, { value: 'A#' }, { value: 'C#m7/H' }, { value: 'C#m7/E' }, { value: 'C#maj' }, { value: 'G/F#' }, { value: 'Em/D' }, { value: 'G-D' }, { value: 'Em-D' }, { value: 'G6' }, { value: 'Aadd9' }, { value: 'Gadd9' }, { value: 'A5' }, { value: 'G5' }, { value: 'B5' }, { value: 'D5' }, { value: 'E5' }, { value: 'F#5' }, { value: 'D6' }, { value: 'A6' }, { value: 'Aadd11' }, { value: 'A+' }, { value: 'C5-' }, { value: 'F-G' }, { value: 'Gm75-' }, { value: 'F/E' }, { value: 'F/D' }, { value: 'Amadd9' }, { value: 'Hmsus2' }, { value: 'G#/' }, { value: 'Am6' }, { value: 'Em7+' }, { value: 'Em6' }, { value: 'H+' }, { value: 'Amsus2' }, { value: 'Cadd9' }, { value: 'Em/' }, { value: 'A-1' }, { value: 'Hmadd13-' }, { value: 'Bb' }, { value: 'Hm/' }, { value: 'E/' }, { value: 'D/' }, { value: 'A/' }, { value: 'A/C#' }, { value: 'A--------' }, { value: 'F/' }, { value: 'Gm#' }, { value: 'Dm#(VI)' }, { value: 'Am#(VI)' }, { value: 'H7/' }, { value: 'A#m7' }, { value: 'G#G#G#' }, { value: 'Am7#' }, { value: 'A7#' }, { value: 'Em/G' }, { value: 'G#m/D#' }, { value: 'F#m/C#' }, { value: 'F7' }, { value: 'G7' }, { value: 'Abmaj' }, { value: 'Cm7' }, { value: 'A7+5' }, { value: 'Bbm7' }, { value: 'Bb7' }, { value: 'Eb' }, { value: 'C75+' }, { value: 'Fm7' }, { value: 'Bb6' }, { value: 'B7+5' }, { value: 'Dm6/' }, { value: 'Dm6' }, { value: 'C#7' }, { value: 'Gdim' }, { value: 'Emadd9' }, { value: 'Em/H' }, { value: 'Gmsus4' }, { value: 'Hm5-' }, { value: 'CEmC' }, { value: 'E6' }],
+            datumTokenizer: function (d) {
+                return Bloodhound.tokenizers.whitespace(d.value);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace
+        });
+        engine.initialize();
+        $('#tokenfield').tokenfield({
+            typeahead: [null, { source: engine.ttAdapter() }]
+        });
+    });
+</script>
+
+<div class="modal-content">
+    <div class="modal-header">        
+        <button type="button" class="close" onclick="window.location.href='@Url.Action("Song", "Song", new { performerId = Model.PerformerId, s = Model.SongsSortingType, songNumber = Model.Number })';  return false">&times;</button>
+    </div>
+    <div id="save">
+        @using (Ajax.BeginForm("SaveSong", new AjaxOptions { UpdateTargetId = "save" }))
+            {
+            <div class="modal-body">
+                @Html.TextBoxFor(m => m.Name, new { style = "min-width: 100%" })
+                @Html.TextBoxFor(m => m.Id, new { style = "display: none;" })
+                @Html.TextBoxFor(m => m.Number, new { style = "display: none;" })
+                @Html.TextBoxFor(m => m.PerformerId, new { style = "display: none;" })
+                @Html.TextBoxFor(m => m.SongsSortingType, new { style = "display: none;" })
+                @Html.TextBoxFor(m => m.Chords, new { @class = "form-control", @id = "tokenfield" })
+                @Html.TextAreaFor(m => m.Text, new { @class = "form-control", @rows = "20", style = "min-width: 100%" })
+            </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-success" value="Save" />
+                </div>
+        }
+    </div>
+</div>
+
+<div id="alertDiv" style="margin-top:15px;">
+
+</div>
+

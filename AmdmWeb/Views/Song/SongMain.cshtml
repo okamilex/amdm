@@ -1,0 +1,303 @@
+﻿@model AmdmWeb.Models.Song.SongPageModel
+
+
+<script src="~/Scripts/jquery.bxslider.min.js"></script>
+<link href="~/Content/jquery.bxslider.css" rel="stylesheet" />
+
+<div id="header"></div>
+
+<span class="left carousel-control" id="slider-prev"></span>
+<span class="right carousel-control" id="slider-next"></span>
+
+<ul class="bxslider" id="bxslider">
+    <li id="Lif">
+        <div id="divf">
+            <div>
+                <h2 class="col-md-12">
+                    <a href="@Model.Song.SongPageLink">@Model.Song.Name <span class="badge">@Model.Song.Views</span></a>
+
+
+                    <a href="@Model.Song.VideoLink"><span class="glyphicon glyphicon-film" aria-hidden="true"></span></a>
+
+                    <a href="@Url.Action("SongEditPage", "Song", new { songId = Model.Song.Id, s = Model.SortAndPageData.SongsSortingType })"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+
+                </h2>
+                <div id="myModal" class="modal fade" role="dialog"></div>
+
+
+                <table class="table table-striped">
+                    <tr>
+                        <td class="col-md-6">
+                            <pre>@Model.Song.Text</pre>
+                        </td>
+                        <td class="col-md-6">
+                            <div class="container">
+                                <div class="row">
+                                    @foreach (var chord in Model.Song.Chords)
+                                    {
+                                        <div class="panel panel-info col-md-5">
+                                            <div class="panel-heading">@chord.Name</div>
+                                            <div class="panel-body">
+                                                <img src="http://amdm.ru/images/chords/A_0.gif" />
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </li>
+    
+</ul>
+
+
+
+<script>
+    $(function () {
+        needRedraw = false;
+        function loop() {
+            if(needRedraw)
+            {
+                
+                slider.redrawSlider();
+                
+            }            
+            setTimeout(loop, 100);	
+        };
+        loop();
+       
+        var ajaxURL = '@Url.Action("GetSong","Song")';
+        id = @Model.Song.PerformerId;
+        sortType = "@Model.SortAndPageData.SongsSortingType";
+        number = @Model.Song.Number;
+        count = @Model.SortAndPageData.LasPageNumber;
+        oldSlide = number;
+        
+        $.ajax({
+            type: "Get",
+            url: ajaxURL,
+            data: { performerId: id, s: sortType, songNumber: number },
+            dataType: 'html',
+            success: function (data) {
+                $('#header').html(data);
+            }
+        });
+        for(var i = 1; i <= count + 3; i++)
+        {
+            $('#bxslider').append('<li id="li'+i+'"><div id="'+i+'"></div></li>');
+        }
+        $('#' + number).html($('#divf').html());
+
+        slider = $('.bxslider').bxSlider({
+            controls: false,
+            pager: false,
+            startSlide: number,
+            adaptiveHeight: true,
+            onSliderLoad: function(currentIndex){
+                needRedraw = true;   
+                var ajaxURL = '@Url.Action("SongInfo","Song")';
+                $.ajax({
+                    type: "Get",
+                    url: ajaxURL,
+                    data: { performerId: id, s: sortType, songNumber: number },
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#'+number).html(data);
+                    }
+                });
+            }
+        });
+        header = function()
+        {
+            var ajaxURL = '@Url.Action("GetSong","Song")';
+            $.ajax({
+                type: "Get",
+                url: ajaxURL,
+                data: { performerId: id, s: sortType, songNumber: number },
+                dataType: 'html',
+                success: function (data) {
+                    $('#header').html(data);
+                    history.replaceState(null, null, 'Song?performerId=' + id + '&amp;s=' + sortType + '&amp;songNumber=' + number);
+                }
+            });
+        };
+        slide = function()
+        {
+            var ajaxURL = '@Url.Action("SongInfo","Song")';
+            $.ajax({
+                type: "Get",
+                url: ajaxURL,
+                data: { performerId: id, s: sortType, songNumber: number },
+                dataType: 'html',
+                success: function (data) {
+                    
+                    $('#d'+number).html(data);
+                    slider.reloadSlider({
+                        controls: false,
+                        pager: false,
+                        startSlide: oldSlide,
+                        adaptiveHeight: true,
+                        onSliderLoad: function(currentIndex){
+                            
+                            var ajaxURL = '@Url.Action("SongInfo","Song")';
+                            $.ajax({
+                                type: "Get",
+                                url: ajaxURL,
+                                data: { performerId: id, s: sortType, songNumber: number },
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#'+number).html(data);
+                                    slider.redrawSlider();
+                                }
+                            });
+                        }
+                    });
+                    slider.goToSlide(number);
+                    $('#d'+number).html(data);
+                    needRedraw = true;                
+                    
+                }
+            });
+        };
+        slideFade = function()
+        {
+            var ajaxURL = '@Url.Action("SongInfo","Song")';
+            $.ajax({
+                type: "Get",
+                url: ajaxURL,
+                data: { performerId: id, s: sortType, songNumber: number },
+                dataType: 'html',
+                success: function (data) {
+                    
+                    $('#d'+number).html(data);
+                    slider.reloadSlider({
+                        controls: false,
+                        pager: false,
+                        mode: 'fade',
+                        startSlide: oldSlide,
+                        adaptiveHeight: true,
+                        onSliderLoad: function(currentIndex){
+                            
+                            var ajaxURL = '@Url.Action("SongInfo","Song")';
+                            $.ajax({
+                                type: "Get",
+                                url: ajaxURL,
+                                data: { performerId: id, s: sortType, songNumber: number },
+                                dataType: 'html',
+                                success: function (data) {
+                                    $('#'+number).html(data);
+                                }
+                            });
+                        }
+                    });
+                    slider.goToSlide(number);
+                    $('#d'+number).html(data);
+
+                }
+            });
+        };
+        slidePause = function()
+        {
+            slider.reloadSlider({
+                controls: false,
+                pager: false,
+                startSlide: number,
+                adaptiveHeight: true,
+                onSliderLoad: function(currentIndex){
+                    debugger;
+                    var ajaxURL = '@Url.Action("SongInfo","Song")';
+                    $.ajax({
+                        type: "Get",
+                        url: ajaxURL,
+                        data: { performerId: id, s: sortType, songNumber: number },
+                        dataType: 'html',
+                        success: function (data) {
+                            $('#'+number).html(data);
+                        }
+                    });
+                }
+            });
+        }
+
+        $('#slider-prev').click(function(){
+            needRedraw = false;
+            oldSlide = number;
+            if(number > 1)
+            {
+                number--;
+            }
+            else
+            {
+                number = count;
+            }
+            //slideFade();
+            oldSlide = number;
+            if(number < count)
+            {
+                number++;
+            }
+            else
+            {
+                number = 1;
+            }
+            //slideFade();
+            oldSlide = number;
+            if(number > 1)
+            {
+                number--;
+            }
+            else
+            {
+                number = count;
+            }            
+            slide();
+            debugger;
+            
+            header();
+            return false;
+        });
+        $('#slider-next').click(function(){
+            needRedraw = false;
+            oldSlide = number;
+            if(number < count)
+            {
+                number++;
+            }
+            else
+            {
+                number = 1;
+            }            
+            //slideFade();
+            oldSlide = number;
+            if(number > 1)
+            {
+                number--;
+            }
+            else
+            {
+                number = count;
+            } 
+            //slideFade();
+            oldSlide = number;
+            if(number < count)
+            {
+                number++;
+            }
+            else
+            {
+                number = 1;
+            }            
+            slide();
+            
+            
+            header();
+            return false;
+        });
+
+
+    });
+</script>

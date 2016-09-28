@@ -1,0 +1,12 @@
+﻿@model AmdmWeb.Models.Song.SongPageModel
+
+
+<nav class="breadcrumb">
+    <a class="breadcrumb-item" href="@Url.Action("Index", "Home")">Main</a>
+    /
+    <a class="breadcrumb-item" href="@Url.Action("Performer", "Performer", new { performerId = Model.Song.PerformerId, s = Model.SortAndPageData.SongsSortingType, page = Model.BackPage})">@Model.PerfoemerName</a>
+    /
+    <span class="breadcrumb-item active">@Model.Song.Name</span>
+</nav>
+
+    
