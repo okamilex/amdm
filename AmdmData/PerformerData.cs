@@ -152,7 +152,7 @@ namespace AmdmData
 
         public static List<int> GetPerformersId()
         {
-            return new AmdmContext().Performers.Select(x => x.Id).ToList();
+            return new AmdmContext().Performers.AsQueryable().Select(x => x.Id).ToList();
         }
 
 
