@@ -103,3 +103,7 @@ C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\ru\Micro
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\ru\Microsoft.Owin.Security.MicrosoftAccount.resources.dll
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\obj\Debug\AmdmWeb.dll
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\obj\Debug\AmdmWeb.pdb
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmWeb\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
