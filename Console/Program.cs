@@ -23,7 +23,7 @@ namespace AmdmConsole
             });
             var request = WebRequest.CreateHttp("http://localhost:49992/Log/Loged?time=" + DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString());
 
-            request.GetResponse();
+            
             try
             {
                 using (var response = request.GetResponse())
