@@ -59,7 +59,7 @@
             </div>
         </div>
     </li>
-    
+
 </ul>
 
 
@@ -67,22 +67,54 @@
 <script>
     $(function () {
         needRedraw = false;
+        firstSlide = false;
+        lastSlide = false;
+        firstSlideFlag = true;
+        lastSlideFlag = true;
         function loop() {
             if(needRedraw)
-            {                
-                slider.redrawSlider();                
-            }            
-            setTimeout(loop, 100);	
+            {
+                slider.redrawSlider();
+            }
+            if(firstSlideFlag)
+            {
+                if(firstSlide)
+                {
+                    slideFade(1,count + 1);
+                    firstSlideFlag = false;
+                }
+            }
+            if(lastSlideFlag)
+            {
+                if(lastSlide)
+                {
+                    slideFade(count,0);
+                    lastSlideFlag = false;
+                }
+            }
+            setTimeout(loop, 100);
         };
         loop();
-       
+
         var ajaxURL = '@Url.Action("GetSong","Song")';
         id = @Model.Song.PerformerId;
         sortType = "@Model.SortAndPageData.SongsSortingType";
         number = @Model.Song.Number;
         count = @Model.SortAndPageData.LasPageNumber;
         oldSlide = number;
-        
+        if(number == 1){
+            firstSlide = true;
+        }
+        else{
+            firstSlide = false;
+        }
+        if(number == count){
+            lastSlide = true;
+        }
+        else{
+            lastSlide = false;
+        }
+
         $.ajax({
             type: "Get",
             url: ajaxURL,
@@ -103,8 +135,9 @@
             pager: false,
             startSlide: number,
             adaptiveHeight: true,
+            adaptiveHeightSpeed: 100,
             onSliderLoad: function(currentIndex){
-                needRedraw = true;   
+                needRedraw = true;
                 var ajaxURL = '@Url.Action("SongInfo","Song")';
                 $.ajax({
                     type: "Get",
@@ -140,15 +173,16 @@
                 data: { performerId: id, s: sortType, songNumber: number },
                 dataType: 'html',
                 success: function (data) {
-                    
+
                     $('#d'+number).html(data);
                     slider.reloadSlider({
                         controls: false,
                         pager: false,
                         startSlide: oldSlide,
                         adaptiveHeight: true,
+                        adaptiveHeightSpeed: 100,
                         onSliderLoad: function(currentIndex){
-                            
+
                             var ajaxURL = '@Url.Action("SongInfo","Song")';
                             $.ajax({
                                 type: "Get",
@@ -157,21 +191,29 @@
                                 dataType: 'html',
                                 success: function (data) {
                                     $('#'+number).html(data);
-                                    $('#thisSong').html($('#songName').html());
-                                    slider.redrawSlider();
                                 }
                             });
                         }
+
                     });
                     slider.goToSlide(number);
                     $('#d'+number).html(data);
-                    needRedraw = true;                
-                    
+                    needRedraw = true;
+                    if(number == 1)
+                    {
+                        firstSlide == true;
+                    }
+                    if(number == count)
+                    {
+                        lastSlide == true;
+                    }
+
                 }
             });
         };
-        slideFade = function()
+        slideFade = function(a,b)
         {
+            debugger;
             var ajaxURL = '@Url.Action("SongInfo","Song")';
             $.ajax({
                 type: "Get",
@@ -179,48 +221,44 @@
                 data: { performerId: id, s: sortType, songNumber: number },
                 dataType: 'html',
                 success: function (data) {
-                    
-                    $('#d'+number).html(data);
+
+                    $('#d'+b).html(data);
                     slider.reloadSlider({
                         controls: false,
                         pager: false,
                         mode: 'fade',
-                        startSlide: oldSlide,
+                        startSlide: a,
                         adaptiveHeight: true,
-                        onSliderLoad: function(currentIndex){
-                            
-                            var ajaxURL = '@Url.Action("SongInfo","Song")';
-                            $.ajax({
-                                type: "Get",
-                                url: ajaxURL,
-                                data: { performerId: id, s: sortType, songNumber: number },
-                                dataType: 'html',
-                                success: function (data) {
-                                    $('#'+number).html(data);
-                                }
-                            });
-                        }
+                        adaptiveHeightSpeed: 10
                     });
-                    slider.goToSlide(number);
-                    $('#d'+number).html(data);
-
+                    slider.goToSlide(b);
+                    slider.goToSlide(a);
+                    slider.reloadSlider({
+                        controls: false,
+                        pager: false,
+                        startSlide: a,
+                        adaptiveHeight: true
+                    });
+                    $('#d'+b).html(data);
                 }
             });
         };
-        
+
 
         $('#slider-prev').click(function(){
             needRedraw = false;
-            oldSlide = number;            
+            oldSlide = number;
             if(number > 1)
             {
                 number--;
+
             }
             else
             {
+                oldSlide = count + 1;
                 number = count;
-            }                     
-            slide();            
+            }
+            slide();
             header();
             return false;
         });
@@ -233,8 +271,9 @@
             }
             else
             {
+                oldSlide = 0;
                 number = 1;
-            }       
+            }
             slide();
             header();
             return false;
