@@ -16,6 +16,15 @@
 
 <span class="left carousel-control" id="slider-prev"></span>
 <span class="right carousel-control" id="slider-next"></span>
+<div class="progress">
+    <div class="progress-bar progress-bar-warning" id="b" role="progressbar" style="width:15%">        
+    </div>
+    <div class="progress-bar progress-bar-success" id="page" role="progressbar" style="width:5%">
+       
+    </div>
+    <div class="progress-bar progress-bar-warning" id="a" role="progressbar" style="width:80%">        
+    </div>
+</div>
 
 <ul class="bxslider" id="bxslider">
     <li id="Lif">
@@ -102,6 +111,9 @@
         number = @Model.Song.Number;
         count = @Model.SortAndPageData.LasPageNumber;
         oldSlide = number;
+        $('#b').css('width', (number - 1)/(count - 1)*95+'%');
+        $('#a').css('width', 95-(number - 1)/(count - 1)*95+'%');
+        $('#page').html(number +' / '+ count);
         if(number == 1){
             firstSlide = true;
         }
@@ -258,6 +270,9 @@
                 oldSlide = count + 1;
                 number = count;
             }
+            $('#b').css('width', (number - 1)/(count - 1)*95+'%');
+            $('#a').css('width', 95-(number - 1)/(count - 1)*95+'%');
+            $('#page').html(number +' / '+ count);
             slide();
             header();
             return false;
@@ -274,6 +289,9 @@
                 oldSlide = 0;
                 number = 1;
             }
+            $('#b').css('width', (number - 1)/(count - 1)*95+'%');
+            $('#a').css('width', 95-(number - 1)/(count - 1)*95+'%');
+            $('#page').html(number +' / '+ count);
             slide();
             header();
             return false;
