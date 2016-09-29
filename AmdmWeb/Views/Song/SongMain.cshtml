@@ -4,7 +4,15 @@
 <script src="~/Scripts/jquery.bxslider.min.js"></script>
 <link href="~/Content/jquery.bxslider.css" rel="stylesheet" />
 
-<div id="header"></div>
+<div id="header">
+    <nav class="breadcrumb">
+        <a class="breadcrumb-item" href="@Url.Action("Index", "Home")">Main</a>
+        /
+        <a class="breadcrumb-item" href="@Url.Action("Performer", "Performer", new { performerId = Model.Song.PerformerId, s = Model.SortAndPageData.SongsSortingType, page = Model.BackPage})">@Model.PerfoemerName</a>
+        /
+        <span class="breadcrumb-item active" id="thisSong">@Model.Song.Name</span>
+    </nav>
+</div>
 
 <span class="left carousel-control" id="slider-prev"></span>
 <span class="right carousel-control" id="slider-next"></span>
@@ -61,10 +69,8 @@
         needRedraw = false;
         function loop() {
             if(needRedraw)
-            {
-                
-                slider.redrawSlider();
-                
+            {                
+                slider.redrawSlider();                
             }            
             setTimeout(loop, 100);	
         };
@@ -151,6 +157,7 @@
                                 dataType: 'html',
                                 success: function (data) {
                                     $('#'+number).html(data);
+                                    $('#thisSong').html($('#songName').html());
                                     slider.redrawSlider();
                                 }
                             });
@@ -200,32 +207,11 @@
                 }
             });
         };
-        slidePause = function()
-        {
-            slider.reloadSlider({
-                controls: false,
-                pager: false,
-                startSlide: number,
-                adaptiveHeight: true,
-                onSliderLoad: function(currentIndex){
-                    debugger;
-                    var ajaxURL = '@Url.Action("SongInfo","Song")';
-                    $.ajax({
-                        type: "Get",
-                        url: ajaxURL,
-                        data: { performerId: id, s: sortType, songNumber: number },
-                        dataType: 'html',
-                        success: function (data) {
-                            $('#'+number).html(data);
-                        }
-                    });
-                }
-            });
-        }
+        
 
         $('#slider-prev').click(function(){
             needRedraw = false;
-            oldSlide = number;
+            oldSlide = number;            
             if(number > 1)
             {
                 number--;
@@ -233,30 +219,8 @@
             else
             {
                 number = count;
-            }
-            //slideFade();
-            oldSlide = number;
-            if(number < count)
-            {
-                number++;
-            }
-            else
-            {
-                number = 1;
-            }
-            //slideFade();
-            oldSlide = number;
-            if(number > 1)
-            {
-                number--;
-            }
-            else
-            {
-                number = count;
-            }            
-            slide();
-            debugger;
-            
+            }                     
+            slide();            
             header();
             return false;
         });
@@ -270,30 +234,8 @@
             else
             {
                 number = 1;
-            }            
-            //slideFade();
-            oldSlide = number;
-            if(number > 1)
-            {
-                number--;
-            }
-            else
-            {
-                number = count;
-            } 
-            //slideFade();
-            oldSlide = number;
-            if(number < count)
-            {
-                number++;
-            }
-            else
-            {
-                number = 1;
-            }            
+            }       
             slide();
-            
-            
             header();
             return false;
         });
