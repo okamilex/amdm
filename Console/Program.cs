@@ -12,19 +12,33 @@ namespace AmdmConsole
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
             var idList = Logic.GetPerformersId();
-            idList.ForEach(id => {
+            idList.ForEach(id =>
+            {
                 var s = Logic.GetSongsCount(id);
                 AmdmLogger.Trace("Performer " + id + " : " + s + " songs");
             });
             var request = WebRequest.CreateHttp("http://localhost:49992/Log/Loged?time=" + DateTime.Now.ToShortTimeString() + " " + DateTime.Now.ToShortDateString());
+
             request.GetResponse();
+            try
+            {
+                using (var response = request.GetResponse())
+                {
 
-
+                }
+            }
+            catch (WebException ex)
+            {
+                AmdmLogger.Error(ex.ToString());
+            }
 
         }
+
+
+            
     }
 }

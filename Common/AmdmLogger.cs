@@ -14,5 +14,9 @@ namespace Common
         {
             logger.Trace(log);
         }
+        public static void Error(string log)
+        {
+            logger.Error(log);
+        }
     }
 }
