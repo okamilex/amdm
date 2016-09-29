@@ -96,9 +96,9 @@ namespace AmdmWeb.Controllers
         }
         [HttpPost]
         public ActionResult SaveSong(SongEditModel model)
-        {
-            model.Number = Logic.GetNumber(model.Id, model.SongsSortingType);
+        {            
             Logic.EditSong(model.Id, model.Name, model.Text, model.Chords);
+            model.Number = Logic.GetNumber(model.Id, model.SongsSortingType);
             return PartialView(model);
         }
 
