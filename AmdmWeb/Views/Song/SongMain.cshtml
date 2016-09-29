@@ -14,8 +14,8 @@
     </nav>
 </div>
 
-<span class="left carousel-control" id="slider-prev"></span>
-<span class="right carousel-control" id="slider-next"></span>
+<span class="left carousel-control" id="slider-prev" style="height:100% !important;"></span>
+<span class="right carousel-control" id="slider-next" style="height:100% !important;"></span>
 <div class="progress">
     <div class="progress-bar progress-bar-warning" id="b" role="progressbar" style="width:15%">        
     </div>
@@ -143,8 +143,7 @@
         for(var i = 1; i <= count + 3; i++)
         {
             $('#bxslider').append('<li id="li'+i+'"><div id="'+i+'"></div></li>');
-        }
-        //$('#' + number).html($('#divf').html());
+        }       
 
         slider = $('.bxslider').bxSlider({
             controls: false,
