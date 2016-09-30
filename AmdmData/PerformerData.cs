@@ -156,22 +156,23 @@ namespace AmdmData
         public static bool EditSong(int songId, string name, string text, string chords)
         {
             Songs song;
+            var chordsNamesList = chords.Trim().Split(',').ToList();
             using (var context = new AmdmContext())
             {
                 context.SaveChanges();
                 song = context.Songs.Find(songId);
                 song.Name = name;
                 song.Text = text;
-                song.Chords = new List<Chords>();
-                var chordsNamesList = chords.Trim().Split(',').ToList();
+                song.Chords = new List<Chords>();                
                 chordsNamesList = chordsNamesList.Select(x => x.Trim()).ToList();
                 var chordsList = context.Chords.AsEnumerable().ToList();
                 var chordsListString = chordsList.Select(x => x.Name).ToList();
-                chordsNamesList = chordsListString.Intersect(chordsNamesList).ToList();
+                chordsNamesList = chordsListString.Intersect(chordsNamesList).OrderBy(x => x).ToList();
                 chordsNamesList.ForEach(x => song.Chords.Add(context.Chords.SingleOrDefault(y => y.Name.Equals(x))));
                 context.SaveChanges();
             }
             cache.Set("song" + songId, song, null);
+            cache.Set("ChordsAsStrings" + songId, chordsNamesList, null);
 
             return true;
         }
