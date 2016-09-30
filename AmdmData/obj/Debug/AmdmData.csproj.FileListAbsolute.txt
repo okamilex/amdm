@@ -10,3 +10,7 @@ C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\bin\Debug\r
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.csprojResolveAssemblyReference.cache
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.dll
 C:\Users\a2.volk\documents\visual studio 2015\Projects\Amdm\AmdmData\obj\Debug\AmdmData.pdb
+C:\Users\a2.volk\documents\visual studio 2015\Projects\amdm\AmdmData\bin\Debug\CacheManager.Core.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\amdm\AmdmData\bin\Debug\CacheManager.SystemRuntimeCaching.dll
+C:\Users\a2.volk\documents\visual studio 2015\Projects\amdm\AmdmData\bin\Debug\CacheManager.Core.xml
+C:\Users\a2.volk\documents\visual studio 2015\Projects\amdm\AmdmData\bin\Debug\CacheManager.SystemRuntimeCaching.xml

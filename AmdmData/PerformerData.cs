@@ -4,18 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Runtime.Hosting;
+using System.Runtime.Caching;
+using System.IO;
 
 namespace AmdmData
 {
     public class PerformerData
     {
-        
+        private static ObjectCache cache = MemoryCache.Default;
         public static List<Performers> GetPageOfPerformerList(PerformersSortingTypes performersSortingType, int performersPageNumber, int pageSize)
         {
+            var count = GetPerformersCount();
             var performersContext = new AmdmContext().Performers.AsQueryable();
-
-
             switch (performersSortingType)
             {
                 case PerformersSortingTypes.ByName:
@@ -29,12 +30,12 @@ namespace AmdmData
                         .Take(pageSize);
                     break;
                 case PerformersSortingTypes.BySongCount:
-                    performersContext = performersContext.OrderBy(x => x.Songs.Count)
+                    performersContext = performersContext.OrderBy(x => x.Songs.Count * count + x.Id)
                         .Skip((performersPageNumber - 1) * pageSize)
                         .Take(pageSize);
                     break;
                 case PerformersSortingTypes.BySongCountBack:
-                    performersContext = performersContext.OrderByDescending(x => x.Songs.Count);
+                    performersContext = performersContext.OrderByDescending(x => x.Songs.Count * count + x.Id);
 
                     performersContext = performersContext.Skip((performersPageNumber - 1) * pageSize);
                     performersContext = performersContext.Take(pageSize);
@@ -46,17 +47,34 @@ namespace AmdmData
         }
         public static int GetPerformersCount()
         {
-            return new AmdmContext().Performers.Count();
+            NullInt count = cache["performerCount"] as NullInt;
+
+            if (count == null)
+            {
+                count = new NullInt
+                {
+                    Value = new AmdmContext().Performers.Count()
+                };
+                cache.Set("performerCount", count, null);
+            }
+            return count.Value;
         }
 
         /////////////////////////////////////////////////////////
 
         public static Performers GetPerformerById(int performerId)
         {
-            return new AmdmContext().Performers.Find(performerId);
+            Performers performer = cache["performer" + performerId] as Performers;
+            if (performer == null)
+            {
+                performer = new AmdmContext().Performers.Find(performerId);
+                cache.Set("performer" + performerId, performer, null);
+            }
+            return performer;
         }
         public static List<Songs> GetPageOfSongList(int performerId, SongsSortingTypes songsSortingType, int songPageNumber, int pageSize)
         {
+            var count = GetAllSongsCount();
             var songs = new AmdmContext().Songs.Where(x => x.PerformerId == performerId).AsQueryable();
             switch (songsSortingType)
             {
@@ -71,22 +89,22 @@ namespace AmdmData
                         .Take(pageSize);
                     break;
                 case SongsSortingTypes.ByChordCount:
-                    songs = songs.OrderBy(x => x.Chords.Count)
+                    songs = songs.OrderBy(x => x.Chords.Count*count + x.Id)
                         .Skip((songPageNumber - 1) * pageSize)
                         .Take(pageSize);
                     break;
                 case SongsSortingTypes.ByChordCountBack:
-                    songs = songs.OrderByDescending(x => x.Chords.Count)
+                    songs = songs.OrderByDescending(x => x.Chords.Count * count + x.Id)
                         .Skip((songPageNumber - 1) * pageSize)
                         .Take(pageSize);
                     break;
                 case SongsSortingTypes.ByViews:
-                    songs = songs.OrderBy(x => x.Views)
+                    songs = songs.OrderBy(x => x.Views * count + x.Id)
                         .Skip((songPageNumber - 1) * pageSize)
                         .Take(pageSize);
                     break;
                 case SongsSortingTypes.ByViewsBack:
-                    songs = songs.OrderByDescending(x => x.Views)
+                    songs = songs.OrderByDescending(x => x.Views * count + x.Id)
                         .Skip((songPageNumber - 1) * pageSize)
                         .Take(pageSize);
                     break;
@@ -96,25 +114,54 @@ namespace AmdmData
 
         public static Songs GetSongById(int songId)
         {
-            return new AmdmContext().Songs.Find(songId);
+            Songs song = cache["song" + songId] as Songs;
+            if (song == null)
+            {
+                song = new AmdmContext().Songs.Find(songId);
+                cache.Set("song" + songId, song, null);
+            }
+            return song;
         }
         public static int GetSongsCount(int performerId)
         {
-            return new AmdmContext().Songs.Where(x => x.PerformerId == performerId).Count();
+            NullInt count = cache["songsOf" + performerId] as NullInt;
+
+            if (count == null)
+            {
+                count = new NullInt
+                {
+                    Value = new AmdmContext().Songs.Where(x => x.PerformerId == performerId).Count()
+                };
+                cache.Set("songsOf" + performerId, count, null);
+            }
+            return count.Value;
+        }
+        public static int GetAllSongsCount()
+        {
+            NullInt count = cache["songsCount"] as NullInt;
+
+            if (count == null)
+            {
+                count = new NullInt
+                {
+                    Value = new AmdmContext().Songs.Count()
+                };
+                cache.Set("songsCount", count, null);
+            }
+            return count.Value;
         }
 
         /////////////////////////////////////////////////////////
 
-        public static bool EditSong(int id, string name, string text, string chords)
+        public static bool EditSong(int songId, string name, string text, string chords)
         {
+            Songs song;
             using (var context = new AmdmContext())
             {
                 context.SaveChanges();
-
-                var song = context.Songs.Find(id);
+                song = context.Songs.Find(songId);
                 song.Name = name;
                 song.Text = text;
-
                 song.Chords = new List<Chords>();
                 var chordsNamesList = chords.Trim().Split(',').ToList();
                 chordsNamesList = chordsNamesList.Select(x => x.Trim()).ToList();
@@ -122,37 +169,35 @@ namespace AmdmData
                 var chordsListString = chordsList.Select(x => x.Name).ToList();
                 chordsNamesList = chordsListString.Intersect(chordsNamesList).ToList();
                 chordsNamesList.ForEach(x => song.Chords.Add(context.Chords.SingleOrDefault(y => y.Name.Equals(x))));
-
-
                 context.SaveChanges();
             }
-            var ch = new AmdmContext().Songs.Find(id);
+            cache.Set("song" + songId, song, null);
+
             return true;
-        }
-        public static bool Check(string name, List<string> chords)
-        {
-            bool r = false;
-            chords.ForEach(x =>
-            {
-                if (x.Equals(name))
-                {
-                    r = true;
-                }
-            });
-            return r;
         }
         public static List<string> GetChordsAsStrings(int songId)
         {
-
-            return new AmdmContext().Songs.Find(songId).Chords.Select(x => x.Name).ToList();
-
+            List<string> listOfIds = cache["ChordsAsStrings" + songId] as List<string>;
+            if (listOfIds == null)
+            {
+                listOfIds = new AmdmContext().Songs.Find(songId).Chords.Select(x => x.Name).ToList();
+                cache.Set("ChordsAsStrings" + songId, listOfIds, null);
+            }
+            return listOfIds;
         }
 
         /////////////////////////////////////////////////////////
 
         public static List<int> GetPerformersId()
         {
-            return new AmdmContext().Performers.AsQueryable().Select(x => x.Id).ToList();
+            List<int> listOfIds = cache["PerformersId"] as List<int>;
+            if (listOfIds == null)
+            {
+                listOfIds = new AmdmContext().Performers.AsQueryable().Select(x => x.Id).ToList();
+                cache.Set("PerformersId", listOfIds, null);
+            }
+            return listOfIds;
+
         }
 
 
@@ -187,6 +232,18 @@ namespace AmdmData
 
 
             return chList.ToList();
+        }
+        public static bool Check(string name, List<string> chords)
+        {
+            bool r = false;
+            chords.ForEach(x =>
+            {
+                if (x.Equals(name))
+                {
+                    r = true;
+                }
+            });
+            return r;
         }
 
 
