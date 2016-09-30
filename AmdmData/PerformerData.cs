@@ -48,7 +48,6 @@ namespace AmdmData
         public static int GetPerformersCount()
         {
             NullInt count = cache["performerCount"] as NullInt;
-
             if (count == null)
             {
                 count = new NullInt
@@ -173,18 +172,17 @@ namespace AmdmData
             }
             cache.Set("song" + songId, song, null);
             cache.Set("ChordsAsStrings" + songId, chordsNamesList, null);
-
             return true;
         }
         public static List<string> GetChordsAsStrings(int songId)
         {
-            List<string> listOfIds = cache["ChordsAsStrings" + songId] as List<string>;
-            if (listOfIds == null)
+            List<string> listOfChords = cache["ChordsAsStrings" + songId] as List<string>;
+            if (listOfChords == null)
             {
-                listOfIds = new AmdmContext().Songs.Find(songId).Chords.Select(x => x.Name).ToList();
-                cache.Set("ChordsAsStrings" + songId, listOfIds, null);
+                listOfChords = new AmdmContext().Songs.Find(songId).Chords.Select(x => x.Name).ToList();
+                cache.Set("ChordsAsStrings" + songId, listOfChords, null);
             }
-            return listOfIds;
+            return listOfChords;
         }
 
         /////////////////////////////////////////////////////////
@@ -204,53 +202,6 @@ namespace AmdmData
 
 
 
-        public static string GetPerformerNameById(int performerId)
-        {
-            return new AmdmContext().Performers.Find(performerId).Name;
-        }
-        public static string GetAllChords()
-        {
-            string s = "[";
-            new AmdmContext().Chords.ToList().ForEach(x => s = s + ", { value: '" + x.Name + "'}");
-            s = s + "],";
-            return s;
-        }
-        public static Chords GetChord(string name)
-        {
-            return new AmdmContext().Chords.FirstOrDefault(x => x.Name == name);
-        }
-        public static List<Chords> GetChords(string s)
-        {
-            var chordsNamesList = s.Split(',').ToList();
-            var si = chordsNamesList.First();
-            var cho = chordsNamesList.Select(x => x = x.Substring(1, x.Length - 1)).ToList();
-            cho.Add(si);
-            var chordsList = new AmdmContext().Chords.AsEnumerable().ToList();
-            var samName = chordsList.Select(x => x.Name).ToList();
-            var samName2 = samName.Intersect(cho).ToList();
-            var chList = chordsList.Where(x =>
-                Check(x.Name, samName2));
-
-
-            return chList.ToList();
-        }
-        public static bool Check(string name, List<string> chords)
-        {
-            bool r = false;
-            chords.ForEach(x =>
-            {
-                if (x.Equals(name))
-                {
-                    r = true;
-                }
-            });
-            return r;
-        }
-
-
-        public static int GetPerformerIdBySongId(int songId)
-        {
-            return (int)GetSongById(songId).PerformerId;
-        }
+        
     }
 }

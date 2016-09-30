@@ -78,21 +78,6 @@ namespace AmdmLogic
 
 
 
-        public static string GetPerformerNameById(int performerId)
-        {
-            return PerformerData.GetPerformerNameById(performerId);
-        }
-        public static string GetAllChords()
-        {
-            return PerformerData.GetAllChords();
-        }
-        public static Chords GetChord(string name)
-        {
-            return PerformerData.GetChord(name);
-        }
-        public static List<Chords> GetChords(string s)
-        {
-            return PerformerData.GetChords(s);
-        }
+        
     }
 }
